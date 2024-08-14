@@ -20,8 +20,8 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT
 # st.stop()
 # CONVERT TO PANDAS DATAFRAME SO WE CAN USE LOC FUNCTION
 pdf_df=my_dataframe.to_pandas()
-st.dataframe(pdf_df)
-st.stop()
+# st.dataframe(pdf_df)
+# st.stop()
 
 ingredients_list = st.multiselect(
     'choose upto 5 ingredients:',
@@ -35,8 +35,10 @@ if ingredients_list:
     ingredients_string = '';
     for fruit in ingredients_list:
         ingredients_string += fruit + ' '
+        search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit, 'SEARCH_ON'].iloc[0]
+        st.write('The search value for ', fruit,' is ', search_on, '.')
         st.subheader(fruit + ' Nutritional Information')
-        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit)
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+search_on)
         fv_df = st.dataframe(data = fruityvice_response.json(), use_container_width = True)
 
     time_to_insert = st.button('Submit Order')

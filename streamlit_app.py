@@ -1,6 +1,7 @@
 # Import python packages
 import streamlit as st
 from snowflake.snowpark.functions import col
+import requests
 
 # Write directly to the app
 st.title("Form to customise your smoothie :)")
@@ -28,6 +29,8 @@ if ingredients_list:
     ingredients_string = '';
     for fruit in ingredients_list:
         ingredients_string += fruit + ' '
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit)
+        fv_df = st.dataframe(data = fruityvice_response.json(), use_container_width = True)
 
     time_to_insert = st.button('Submit Order')
 
@@ -41,8 +44,5 @@ if ingredients_list:
             st.success('Your Smoothie is ordered!', icon="✅")
 
 
-#new section to display fruit information
-import requests
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
-# st.text(fruityvice_requests)
-fv_df = st.dataframe(data = fruityvice_response.json(), use_container_width = True)
+
+
